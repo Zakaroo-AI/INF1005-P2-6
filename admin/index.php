@@ -29,12 +29,51 @@ $recentListings = $pdo->query("
     JOIN cards c ON l.card_id   = c.card_id
     ORDER BY l.created_at DESC LIMIT 5
 ")->fetchAll();
+
+// Chart: Orders over last 7 days
+$ordersChart = $pdo->query("
+    SELECT DATE(created_at) AS day, COUNT(*) AS count
+    FROM orders
+    WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+    GROUP BY DATE(created_at)
+    ORDER BY day
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Fill missing days with 0
+$orderLabels = [];
+$orderData   = [];
+for ($i = 6; $i >= 0; $i--) {
+    $day           = date('Y-m-d', strtotime("-$i days"));
+    $orderLabels[] = date('D d/m', strtotime($day));
+    $orderData[]   = (int)($ordersChart[$day] ?? 0);
+}
+
+// Chart: Listings by rarity
+$rarityRows = $pdo->query("
+    SELECT c.rarity, COUNT(*) AS count
+    FROM listings l JOIN cards c ON l.card_id = c.card_id
+    WHERE l.status = 'active'
+    GROUP BY c.rarity
+")->fetchAll();
+$rarityLabels = array_column($rarityRows, 'rarity');
+$rarityData   = array_map('intval', array_column($rarityRows, 'count'));
+
+// Chart: Listings by typing
+$typingRows = $pdo->query("
+    SELECT c.typing, COUNT(*) AS count
+    FROM listings l JOIN cards c ON l.card_id = c.card_id
+    WHERE l.status = 'active'
+    GROUP BY c.typing
+    ORDER BY count DESC
+")->fetchAll();
+$typingLabels = array_column($typingRows, 'typing');
+$typingData   = array_map('intval', array_column($typingRows, 'count'));
 ?>
 
 <div class="container-fluid">
     <div class="row">
         <?php include 'sidebar.php'; ?>
-        <main class="col-md-9 col-lg-10 px-4 py-4">
+        <div class="col-md-9 col-lg-10 px-4 py-4">
             <h1 class="h3 fw-bold mb-4">Dashboard</h1>
 
             <!-- Stat Cards -->
@@ -114,8 +153,88 @@ $recentListings = $pdo->query("
                     </div>
                 </div>
             </div>
-        </main>
+
+            <!-- Charts -->
+            <div class="row g-4 mt-2">
+                <!-- Orders last 7 days -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h2 class="h6 fw-bold mb-3">Orders — Last 7 Days</h2>
+                        <canvas id="ordersChart" height="100"></canvas>
+                    </div>
+                </div>
+                <!-- Listings by rarity -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h2 class="h6 fw-bold mb-3">Listings by Rarity</h2>
+                        <canvas id="rarityChart"></canvas>
+                    </div>
+                </div>
+                <!-- Listings by typing -->
+                <div class="col-lg-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h2 class="h6 fw-bold mb-3">Listings by Typing</h2>
+                        <canvas id="typingChart" height="60"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const orderLabels = <?= json_encode($orderLabels) ?>;
+const orderData   = <?= json_encode($orderData) ?>;
+const rarityLabels = <?= json_encode($rarityLabels) ?>;
+const rarityData   = <?= json_encode($rarityData) ?>;
+const typingLabels = <?= json_encode($typingLabels) ?>;
+const typingData   = <?= json_encode($typingData) ?>;
+
+// Orders line chart
+new Chart(document.getElementById('ordersChart'), {
+    type: 'line',
+    data: {
+        labels: orderLabels,
+        datasets: [{
+            label: 'Orders',
+            data: orderData,
+            borderColor: '#0d6efd',
+            backgroundColor: 'rgba(13,110,253,0.1)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#0d6efd'
+        }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+
+// Rarity doughnut chart
+const rarityColors = ['#6c757d','#198754','#0d6efd','#6f42c1','#fd7e14','#ffc107'];
+new Chart(document.getElementById('rarityChart'), {
+    type: 'doughnut',
+    data: {
+        labels: rarityLabels,
+        datasets: [{ data: rarityData, backgroundColor: rarityColors, borderWidth: 2 }]
+    },
+    options: { plugins: { legend: { position: 'bottom' } } }
+});
+
+// Typing bar chart
+const typingColors = {
+    'Fire':'#fd7e14','Water':'#0d6efd','Grass':'#198754','Electric':'#ffc107',
+    'Psychic':'#9c6dd8','Fighting':'#dc3545','Darkness':'#343a40','Metal':'#6c757d',
+    'Colorless':'#adb5bd','Dragon':'#6f42c1','Fairy':'#e91e8c'
+};
+const typingBg = typingLabels.map(t => typingColors[t] ?? '#0d6efd');
+new Chart(document.getElementById('typingChart'), {
+    type: 'bar',
+    data: {
+        labels: typingLabels,
+        datasets: [{ label: 'Listings', data: typingData, backgroundColor: typingBg, borderRadius: 6 }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+</script>
 
 <?php require_once '../includes/footer.php'; ?>

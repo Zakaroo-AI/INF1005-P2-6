@@ -58,12 +58,10 @@ function e(string $str): string {
 // Type badge colour mapping
 function typeBadgeColor(string $type): string {
     $colors = [
-        'Fire'     => '#FF6B35', 'Water'    => '#4A90D9', 'Grass'    => '#48A744',
-        'Electric' => '#F5C518', 'Psychic'  => '#F95587', 'Ghost'    => '#735797',
-        'Dragon'   => '#6F35FC', 'Dark'     => '#705746', 'Fighting' => '#C22E28',
-        'Steel'    => '#B7B7CE', 'Normal'   => '#A8A878', 'Poison'   => '#A33EA1',
-        'Flying'   => '#A98FF3', 'Rock'     => '#B6A136', 'Ground'   => '#E2BF65',
-        'Ice'      => '#96D9D6', 'Bug'      => '#A6B91A', 'Fairy'    => '#D685AD',
+        'Fire'      => '#FF6B35', 'Water'     => '#4A90D9', 'Grass'     => '#48A744',
+        'Lightning' => '#F5C518', 'Psychic'   => '#F95587', 'Ghost'     => '#735797',
+        'Dragon'    => '#6F35FC', 'Darkness'  => '#705746', 'Fighting'  => '#C22E28',
+        'Metal'     => '#B7B7CE', 'Colorless' => '#A8A878', 'Fairy'     => '#D685AD',
     ];
     return $colors[$type] ?? '#888888';
 }

@@ -2,8 +2,9 @@
 // ============================================================
 // login.php — User Login
 // ============================================================
-require_once 'includes/header.php';
+ob_start();
 $pageTitle = 'Login';
+require_once 'includes/header.php';
 
 $error = '';
 
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <hr class="my-3">
             <p class="text-center small text-muted mb-1">
                 <strong>Test Accounts:</strong><br>
-                Admin: admin@pokemart.com / admin123<br>
+                Admin: admin@pokemart.com / password<br>
                 Trainer: ash@pokemart.com / password
             </p>
             <p class="text-center mt-3 small">Don't have an account? <a href="/register.php">Register free</a></p>

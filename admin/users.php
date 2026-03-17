@@ -2,8 +2,9 @@
 // ============================================================
 // admin/users.php — Manage Users
 // ============================================================
-require_once '../includes/header.php';
-$pageTitle = 'Manage Users';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once '../config/db.php';
+require_once '../includes/auth.php';
 requireAdmin();
 $pdo = getPDO();
 
@@ -36,12 +37,14 @@ $users = $pdo->query("
     FROM users u LEFT JOIN listings l ON u.user_id = l.seller_id
     GROUP BY u.user_id ORDER BY u.created_at DESC
 ")->fetchAll();
+$pageTitle = 'Manage Users';
+require_once '../includes/header.php';
 ?>
 
 <div class="container-fluid">
     <div class="row">
         <?php include 'sidebar.php'; ?>
-        <main class="col-md-9 col-lg-10 px-4 py-4">
+        <div class="col-md-9 col-lg-10 px-4 py-4">
             <h1 class="h3 fw-bold mb-4">Manage Users
                 <span class="badge bg-secondary ms-2 fs-6"><?= count($users) ?></span>
             </h1>
@@ -103,7 +106,7 @@ $users = $pdo->query("
                     </table>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>
 

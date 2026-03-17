@@ -2,8 +2,8 @@
 // ============================================================
 // about.php — About Us
 // ============================================================
-require_once 'includes/header.php';
 $pageTitle = 'About Us';
+require_once 'includes/header.php';
 
 // Handle contact form
 $success = false;
@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="row align-items-center g-5 mb-5">
         <div class="col-md-6">
             <h2 class="section-title">Our Mission</h2>
-            <p>PokéMart Global was founded with a simple belief: every trainer deserves access to a trustworthy marketplace where they can find, buy, and sell Pokémon safely and confidently.</p>
-            <p>We connect trainers from all corners of the Pokémon world, providing a secure platform backed by transparent listings, fair pricing, and top-tier customer protection.</p>
+            <p>PokéMart Global was founded with a simple belief: every collector deserves access to a trustworthy marketplace where they can find, buy, and sell Pokémon cards safely and confidently.</p>
+            <p>We connect collectors from all corners of the world, providing a secure platform backed by transparent listings, fair pricing, and top-tier customer protection for every card transaction.</p>
         </div>
         <div class="col-md-6 text-center">
             <div class="bg-light rounded-4 p-5" style="background:linear-gradient(135deg,#e8ecff,#f0f4ff)!important;">
@@ -71,13 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Team -->
     <section class="mb-5" aria-label="Our team">
         <h2 class="section-title">Meet The Team</h2>
-        <div class="row row-cols-2 row-cols-md-4 g-4 mt-2">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-2 justify-content-center">
             <?php
             $team = [
-                ['name' => 'Alex Chen',    'role' => 'CEO & Founder',       'icon' => 'person-badge'],
+                ['name' => 'Lee Hong Yih', 'role' => 'Head Developer',       'icon' => 'person-badge'],
                 ['name' => 'Jamie Torres', 'role' => 'Head of Technology',   'icon' => 'cpu'],
-                ['name' => 'Sam Lee',      'role' => 'Marketplace Manager',  'icon' => 'shop'],
-                ['name' => 'Riley Park',   'role' => 'Customer Experience',  'icon' => 'heart'],
+                ['name' => 'Sam Lee',      'role' => 'Marketplace Manager',  'icon' => 'shop']
             ];
             foreach ($team as $member): ?>
             <div class="col text-center">

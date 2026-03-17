@@ -13,8 +13,8 @@ $rarity    = trim($_GET['rarity']    ?? '');
 $condition = trim($_GET['condition'] ?? '');
 $language  = trim($_GET['language']  ?? '');
 $sort      = trim($_GET['sort']      ?? 'newest');
-$minPrice  = (float)($_GET['min']    ?? 0);
-$maxPrice  = (float)($_GET['max']    ?? 99999);
+$minPrice  = isset($_GET['min']) && $_GET['min'] !== '' ? (float)$_GET['min'] : 0;
+$maxPrice  = isset($_GET['max']) && $_GET['max'] !== '' ? (float)$_GET['max'] : 99999;
 
 // --- Build query ---
 $where  = ["l.status = 'active'"];
@@ -69,7 +69,7 @@ $stmt->execute($params);
 $listings = $stmt->fetchAll();
 
 $typings    = ['Fire','Water','Grass','Lightning','Psychic','Fighting','Darkness','Metal','Dragon','Colorless','Fairy'];
-$rarities   = ['Common','Uncommon','Rare','Holo Rare','Ultra Rare','Secret Rare'];
+$rarities   = ['Common','Uncommon','Rare','Holo Rare','Double Rare','Ultra Rare','Illustration Rare','Special Illustration Rare','Hyper Rare','Secret Rare','Ace Spec Rare','Shiny Rare','Shiny Ultra Rare','Promo'];
 $conditions = ['PSA 1','PSA 2','PSA 3','PSA 4','PSA 5','PSA 6','PSA 7','PSA 8','PSA 9','PSA 10'];
 $languages  = ['English','Japanese','Korean','Chinese','German','French','Spanish','Italian'];
 ?>

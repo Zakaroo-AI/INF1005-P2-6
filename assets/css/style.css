@@ -14,6 +14,7 @@ body {
     background-color: #f4f6fb;
     font-family: 'Segoe UI', Arial, sans-serif;
     color: #333;
+    padding-top: 56px;
 }
 
 /* ---- Navbar ---- */
@@ -85,12 +86,20 @@ body {
 }
 
 /* ---- Rarity Badge ---- */
-.rarity-common        { background: #6c757d; color: #fff; }
-.rarity-uncommon      { background: #198754; color: #fff; }
-.rarity-rare          { background: linear-gradient(90deg, #0d6efd, #4d94ff); color: #fff; }
-.rarity-holo-rare     { background: linear-gradient(90deg, #0d6efd, #9c6dd8); color: #fff; }
-.rarity-ultra-rare    { background: linear-gradient(90deg, #6f42c1, #fd7e14); color: #fff; }
-.rarity-secret-rare   { background: linear-gradient(90deg, #fd7e14, #ffc107); color: #1a1a1a !important; }
+.rarity-common          { background: #6c757d; color: #fff; }
+.rarity-uncommon        { background: #198754; color: #fff; }
+.rarity-rare            { background: linear-gradient(90deg, #0d6efd, #4d94ff); color: #fff; }
+.rarity-holo-rare       { background: linear-gradient(90deg, #0d6efd, #9c6dd8); color: #fff; }
+.rarity-ultra-rare      { background: linear-gradient(90deg, #6f42c1, #fd7e14); color: #fff; }
+.rarity-secret-rare     { background: linear-gradient(90deg, #fd7e14, #ffc107); color: #1a1a1a !important; }
+.rarity-promo           { background: linear-gradient(90deg, #e91e8c, #9c27b0); color: #fff; }
+.rarity-illustration-rare     { background: linear-gradient(90deg, #00bcd4, #3f51b5); color: #fff; }
+.rarity-special-illustration-rare { background: linear-gradient(90deg, #ff5722, #e91e63); color: #fff; }
+.rarity-hyper-rare      { background: linear-gradient(90deg, #ffd700, #ff8c00); color: #1a1a1a !important; font-weight: 700; }
+.rarity-double-rare     { background: linear-gradient(90deg, #1565c0, #6a1b9a); color: #fff; }
+.rarity-ace-spec-rare   { background: linear-gradient(90deg, #b71c1c, #880e4f); color: #fff; }
+.rarity-shiny-rare      { background: linear-gradient(90deg, #00e5ff, #18ffff); color: #1a1a1a !important; }
+.rarity-shiny-ultra-rare { background: linear-gradient(90deg, #76ff03, #00e5ff); color: #1a1a1a !important; }
 
 /* ---- Condition Badge (PSA 1–10) ---- */
 .condition-psa-1  { background: #dc3545; color: #fff; }

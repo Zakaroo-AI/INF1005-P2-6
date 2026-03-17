@@ -29,7 +29,7 @@ CREATE TABLE cards (
     set_name    VARCHAR(100) NOT NULL,
     card_number VARCHAR(20)  NOT NULL,
     typing      VARCHAR(30)  NOT NULL,
-    rarity      ENUM('Common','Uncommon','Rare','Holo Rare','Ultra Rare','Secret Rare') NOT NULL DEFAULT 'Common',
+    rarity      ENUM('Common','Uncommon','Rare','Holo Rare','Double Rare','Ultra Rare','Illustration Rare','Special Illustration Rare','Hyper Rare','Secret Rare','Ace Spec Rare','Shiny Rare','Shiny Ultra Rare','Promo') NOT NULL DEFAULT 'Common',
     image_url   VARCHAR(255) NOT NULL DEFAULT 'assets/images/default.png',
     description TEXT DEFAULT NULL
 );
@@ -105,11 +105,44 @@ CREATE TABLE wishlist (
     UNIQUE KEY unique_wishlist_item (user_id, listing_id)
 );
 
+-- -----------------------------------------------
+-- DISPUTES
+-- -----------------------------------------------
+CREATE TABLE IF NOT EXISTS disputes (
+    dispute_id  INT AUTO_INCREMENT PRIMARY KEY,
+    order_id    INT NOT NULL,
+    buyer_id    INT NOT NULL,
+    reason      TEXT NOT NULL,
+    status      ENUM('open','resolved','closed') DEFAULT 'open',
+    admin_note  TEXT DEFAULT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)   ON DELETE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES users(user_id)     ON DELETE CASCADE,
+    UNIQUE KEY unique_dispute (order_id, buyer_id)
+);
+
+-- -----------------------------------------------
+-- REVIEWS
+-- -----------------------------------------------
+CREATE TABLE IF NOT EXISTS reviews (
+    review_id   INT AUTO_INCREMENT PRIMARY KEY,
+    order_id    INT NOT NULL,
+    buyer_id    INT NOT NULL,
+    seller_id   INT NOT NULL,
+    rating      TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment     TEXT DEFAULT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_review (order_id, buyer_id),
+    FOREIGN KEY (order_id)  REFERENCES orders(order_id)  ON DELETE CASCADE,
+    FOREIGN KEY (buyer_id)  REFERENCES users(user_id)    ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES users(user_id)    ON DELETE CASCADE
+);
+
 -- ============================================================
 -- SAMPLE DATA
 -- ============================================================
 
--- Admin account (password: admin123)
+-- Admin account (password: password)
 INSERT INTO users (username, email, password_hash, role) VALUES
 ('admin', 'admin@pokemart.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
 
@@ -148,3 +181,9 @@ INSERT INTO listings (seller_id, card_id, title, description, price, stock, cond
 (2, 11, 'Dragonite Fossil Holo',                'Vintage Dragonite from the Fossil expansion. Played but complete.',            300.00,  1, 'PSA 5',  'English'),
 (3, 12, 'Jungle Eevee — Classic Common',        'The original Jungle Eevee. Great for completing the set.',                     25.00,  5, 'PSA 6',  'English'),
 (4, 6,  'Gengar Base Set Holo',                 'Spooky Gengar in great condition. Strong holo with minor whitening.',          550.00,  1, 'PSA 7',  'English');
+
+-- ============================================================
+-- MIGRATION: Run this on existing databases to update rarity ENUM
+-- ============================================================
+-- ALTER TABLE cards
+-- MODIFY COLUMN rarity ENUM('Common','Uncommon','Rare','Holo Rare','Double Rare','Ultra Rare','Illustration Rare','Special Illustration Rare','Hyper Rare','Secret Rare','Ace Spec Rare','Shiny Rare','Shiny Ultra Rare','Promo') NOT NULL DEFAULT 'Common';

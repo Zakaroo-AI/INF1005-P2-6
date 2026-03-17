@@ -2,8 +2,9 @@
 // ============================================================
 // admin/orders.php — Manage Orders & Update Status
 // ============================================================
-require_once '../includes/header.php';
-$pageTitle = 'Manage Orders';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once '../config/db.php';
+require_once '../includes/auth.php';
 requireAdmin();
 $pdo = getPDO();
 
@@ -27,12 +28,14 @@ $orders = $pdo->query("
     GROUP BY o.order_id
     ORDER BY o.created_at DESC
 ")->fetchAll();
+$pageTitle = 'Manage Orders';
+require_once '../includes/header.php';
 ?>
 
 <div class="container-fluid">
     <div class="row">
         <?php include 'sidebar.php'; ?>
-        <main class="col-md-9 col-lg-10 px-4 py-4">
+        <div class="col-md-9 col-lg-10 px-4 py-4">
             <h1 class="h3 fw-bold mb-4">Manage Orders
                 <span class="badge bg-secondary ms-2 fs-6"><?= count($orders) ?></span>
             </h1>
@@ -79,7 +82,7 @@ $orders = $pdo->query("
                     </table>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>
 

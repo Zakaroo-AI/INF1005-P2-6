@@ -19,7 +19,7 @@
                     <li><a href="/browse.php" class="footer-link">Browse Listings</a></li>
                     <li><a href="/about.php"  class="footer-link">About Us</a></li>
                     <?php if (isLoggedIn()): ?>
-                    <li><a href="/create-listing.php" class="footer-link">Sell a Pokémon</a></li>
+                    <li><a href="/create-listing.php" class="footer-link">Sell a Card</a></li>
                     <?php endif; ?>
                 </ul>
             </div>

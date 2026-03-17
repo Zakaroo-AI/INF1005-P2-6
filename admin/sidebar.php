@@ -35,6 +35,11 @@ $adminPage = basename($_SERVER['PHP_SELF']);
                     <i class="bi bi-collection me-2"></i>Cards
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link <?= $adminPage==='disputes.php' ? 'active':'' ?>" href="/admin/disputes.php">
+                    <i class="bi bi-flag me-2"></i>Disputes
+                </a>
+            </li>
             <li class="nav-item mt-3">
                 <a class="nav-link text-muted" href="/index.php">
                     <i class="bi bi-arrow-left me-2"></i>Back to Site

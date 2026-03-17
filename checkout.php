@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if (!empty($errors)): ?>
     <div class="alert alert-danger" role="alert">
-        <ul class="mb-0"><?php foreach ($errors as $err): ?><li><?= $err ?></li><?php endforeach; ?></ul>
+        <ul class="mb-0"><?php foreach ($errors as $err): ?><li><?= e($err) ?></li><?php endforeach; ?></ul>
     </div>
     <?php endif; ?>
 

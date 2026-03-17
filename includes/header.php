@@ -25,8 +25,11 @@ $currentPage   = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
 
+<!-- Skip navigation for keyboard/screen reader users -->
+<a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
+
 <!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg navbar-dark pm-navbar sticky-top" aria-label="Main navigation">
+<nav class="navbar navbar-expand-lg navbar-dark pm-navbar fixed-top" aria-label="Main navigation">
     <div class="container">
         <!-- Brand -->
         <a class="navbar-brand fw-bold fs-4" href="/index.php">
@@ -53,6 +56,14 @@ $currentPage   = basename($_SERVER['PHP_SELF']);
                     <a class="nav-link <?= $currentPage === 'browse.php' ? 'active' : '' ?>"
                        href="/browse.php">Browse</a>
                 </li>
+                <?php if (isLoggedIn()): ?>
+                <li class="nav-item">
+                    <a class="nav-link <?= $currentPage === 'create-listing.php' ? 'active' : '' ?>"
+                       href="/create-listing.php">
+                        Sell
+                    </a>
+                </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a class="nav-link <?= $currentPage === 'about.php' ? 'active' : '' ?>"
                        href="/about.php">About Us</a>
@@ -107,6 +118,7 @@ $currentPage   = basename($_SERVER['PHP_SELF']);
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                             <li><a class="dropdown-item" href="/profile.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
                             <li><a class="dropdown-item" href="/my-listings.php"><i class="bi bi-tags me-2"></i>My Listings</a></li>
+                            <li><a class="dropdown-item" href="/seller-orders.php"><i class="bi bi-shop me-2"></i>My Sales</a></li>
                             <li><a class="dropdown-item" href="/orders.php"><i class="bi bi-bag me-2"></i>My Orders</a></li>
                             <?php if (isAdmin()): ?>
                                 <li><hr class="dropdown-divider"></li>
@@ -139,4 +151,4 @@ $currentPage   = basename($_SERVER['PHP_SELF']);
 </div>
 <?php unset($_SESSION['flash']); endif; ?>
 
-<main>
+<main id="main-content">

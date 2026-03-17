@@ -2,8 +2,8 @@
 // ============================================================
 // index.php — Home / Landing Page
 // ============================================================
-require_once 'includes/header.php';
 $pageTitle = 'Home';
+require_once 'includes/header.php';
 
 $pdo = getPDO();
 
