@@ -231,7 +231,7 @@ require_once 'includes/header.php';
         <div class="alert alert-<?= $dispute['status'] === 'resolved' ? 'success' : ($dispute['status'] === 'closed' ? 'secondary' : 'warning') ?> mb-0">
             <strong>Dispute <?= ucfirst(e($dispute['status'])) ?></strong>
             — Submitted <?= date('d M Y', strtotime($dispute['created_at'])) ?>
-            <p class="mb-0 small mt-1">Your report: "<?= e(mb_strimwidth($dispute['reason'], 0, 120, '...')) ?>"</p>
+            <p class="mb-0 small mt-1">Your report: "<?= e(strlen($dispute['reason'] ?? '') > 120 ? substr($dispute['reason'], 0, 120) . '...' : ($dispute['reason'] ?? '')) ?>"</p>
             <?php if ($dispute['admin_note']): ?>
             <p class="mb-0 small mt-2"><strong>Admin response:</strong> <?= e($dispute['admin_note']) ?></p>
             <?php endif; ?>

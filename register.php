@@ -2,8 +2,9 @@
 // ============================================================
 // register.php — User Registration
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'Register';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 
 $errors = [];
 
@@ -47,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'Register';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5" style="max-width:480px;">

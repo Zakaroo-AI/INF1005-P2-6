@@ -2,8 +2,9 @@
 // ============================================================
 // cart.php — Shopping Cart
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'Shopping Cart';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo    = getPDO();
@@ -27,6 +28,9 @@ $cartTotal = 0;
 foreach ($cartItems as $item) {
     $cartTotal += $item['price'] * $item['quantity'];
 }
+
+$pageTitle = 'Shopping Cart';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5">

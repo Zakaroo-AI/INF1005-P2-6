@@ -51,8 +51,8 @@ function getWishlistCount(): int {
 }
 
 // Sanitize output — always use this before echoing user data
-function e(string $str): string {
-    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+function e(?string $str): string {
+    return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
 }
 
 // Type badge colour mapping

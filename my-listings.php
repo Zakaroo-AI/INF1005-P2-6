@@ -2,8 +2,9 @@
 // ============================================================
 // my-listings.php — Seller's Own Listings
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'My Listings';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo    = getPDO();
@@ -12,7 +13,6 @@ $userId = $_SESSION['user_id'];
 // Handle delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $delId = (int)$_POST['delete_id'];
-    // Verify ownership before deleting
     $stmt = $pdo->prepare("DELETE FROM listings WHERE listing_id = ? AND seller_id = ?");
     $stmt->execute([$delId, $userId]);
     $_SESSION['flash'] = ['type' => 'success', 'message' => 'Listing removed.'];
@@ -28,6 +28,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$userId]);
 $listings = $stmt->fetchAll();
+
+$pageTitle = 'My Listings';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5">

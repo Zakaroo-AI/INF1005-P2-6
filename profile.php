@@ -2,8 +2,9 @@
 // ============================================================
 // profile.php — User Profile
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'My Profile';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo    = getPDO();
@@ -59,6 +60,9 @@ $listingCount = $listingCount->fetchColumn();
 $orderCount = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE buyer_id = ?");
 $orderCount->execute([$userId]);
 $orderCount = $orderCount->fetchColumn();
+
+$pageTitle = 'My Profile';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5" style="max-width:700px;">

@@ -2,8 +2,9 @@
 // ============================================================
 // admin/pokemon.php — Manage Cards Catalogue
 // ============================================================
-require_once '../includes/header.php';
-$pageTitle = 'Manage Cards';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once '../config/db.php';
+require_once '../includes/auth.php';
 requireAdmin();
 $pdo = getPDO();
 
@@ -61,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
 $allCards   = $pdo->query("SELECT * FROM cards ORDER BY card_name")->fetchAll();
 $typings    = ['Fire','Water','Grass','Lightning','Psychic','Fighting','Darkness','Metal','Dragon','Colorless','Fairy'];
 $rarities   = ['Common','Uncommon','Rare','Holo Rare','Double Rare','Ultra Rare','Illustration Rare','Special Illustration Rare','Hyper Rare','Secret Rare','Ace Spec Rare','Shiny Rare','Shiny Ultra Rare','Promo'];
+$pageTitle  = 'Manage Cards';
+require_once '../includes/header.php';
 ?>
 
 <div class="container-fluid">
@@ -210,7 +213,7 @@ async function doSearch() {
     apiStatus.textContent = 'Searching...';
     apiResults.innerHTML  = '';
     try {
-        const res  = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:${encodeURIComponent(q)}*&pageSize=30&select=id,name,set,number,rarity,types,images`);
+        const res  = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:${encodeURIComponent(q)}*&pageSize=50&select=id,name,set,number,rarity,types,images`);
         const data = await res.json();
         const cards = (data.data || []).map(c => ({
             api_id:      c.id,

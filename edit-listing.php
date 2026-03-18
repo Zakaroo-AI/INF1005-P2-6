@@ -2,8 +2,9 @@
 // ============================================================
 // edit-listing.php — Edit Existing Listing
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'Edit Listing';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo       = getPDO();
@@ -49,6 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /my-listings.php'); exit;
     }
 }
+
+$pageTitle = 'Edit Listing';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5" style="max-width:640px;">

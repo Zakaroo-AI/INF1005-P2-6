@@ -2,8 +2,8 @@
 // ============================================================
 // browse.php — Browse All Listings
 // ============================================================
-require_once 'includes/header.php';
 $pageTitle = 'Browse Listings';
+require_once 'includes/header.php';
 $pdo = getPDO();
 
 // --- Filters from GET ---

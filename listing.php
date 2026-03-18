@@ -2,7 +2,9 @@
 // ============================================================
 // listing.php — Single Listing Detail Page
 // ============================================================
-require_once 'includes/header.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 $pdo = getPDO();
 
 $id      = (int)($_GET['id'] ?? 0);
@@ -52,6 +54,8 @@ $related = $pdo->prepare("
 ");
 $related->execute([$listing['typing'], $id]);
 $relatedListings = $related->fetchAll();
+
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5">

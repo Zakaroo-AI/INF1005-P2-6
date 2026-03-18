@@ -230,7 +230,7 @@ async function fetchCards(q) {
 
     try {
         const res  = await fetch(
-            `https://api.pokemontcg.io/v2/cards?q=name:${encodeURIComponent(q)}*&pageSize=30&select=id,name,set,number,rarity,types,images`,
+            `https://api.pokemontcg.io/v2/cards?q=name:${encodeURIComponent(q)}*&pageSize=50&select=id,name,set,number,rarity,types,images`,
             { signal }
         );
         if (!res.ok) throw new Error('API error');

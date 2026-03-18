@@ -2,8 +2,9 @@
 // ============================================================
 // orders.php — Order History
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'My Orders';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo    = getPDO();
@@ -29,6 +30,9 @@ function statusBadge(string $status): string {
         default      => '<span class="badge bg-light text-dark">Unknown</span>'
     };
 }
+
+$pageTitle = 'My Orders';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5">

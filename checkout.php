@@ -2,8 +2,9 @@
 // ============================================================
 // checkout.php — Checkout & Place Order
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'Checkout';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo    = getPDO();
@@ -77,6 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'Checkout';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5" style="max-width:900px;">

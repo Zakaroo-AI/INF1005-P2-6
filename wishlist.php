@@ -2,8 +2,9 @@
 // ============================================================
 // wishlist.php — User Wishlist
 // ============================================================
-require_once 'includes/header.php';
-$pageTitle = 'My Wishlist';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 requireLogin();
 
 $pdo    = getPDO();
@@ -20,6 +21,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$userId]);
 $wishItems = $stmt->fetchAll();
+
+$pageTitle = 'My Wishlist';
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-5">

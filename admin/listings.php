@@ -67,7 +67,7 @@ require_once '../includes/header.php';
                                         <span class="fw-bold small"><?= e($l['card_name']) ?></span>
                                     </div>
                                 </td>
-                                <td class="small"><?= e(mb_strimwidth($l['title'], 0, 40, '...')) ?></td>
+                                <td class="small"><?= e(strlen($l['title'] ?? '') > 40 ? substr($l['title'], 0, 40) . '...' : ($l['title'] ?? '')) ?></td>
                                 <td class="small"><?= e($l['seller_name']) ?></td>
                                 <td class="fw-bold text-primary">$<?= number_format($l['price'],2) ?></td>
                                 <td><?= $l['stock'] ?></td>

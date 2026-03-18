@@ -2,8 +2,9 @@
 // ============================================================
 // admin/index.php — Admin Dashboard
 // ============================================================
-require_once '../includes/header.php';
-$pageTitle = 'Admin Dashboard';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once '../config/db.php';
+require_once '../includes/auth.php';
 requireAdmin();
 $pdo = getPDO();
 
@@ -68,6 +69,9 @@ $typingRows = $pdo->query("
 ")->fetchAll();
 $typingLabels = array_column($typingRows, 'typing');
 $typingData   = array_map('intval', array_column($typingRows, 'count'));
+
+$pageTitle = 'Admin Dashboard';
+require_once '../includes/header.php';
 ?>
 
 <div class="container-fluid">
@@ -222,7 +226,7 @@ new Chart(document.getElementById('rarityChart'), {
 
 // Typing bar chart
 const typingColors = {
-    'Fire':'#fd7e14','Water':'#0d6efd','Grass':'#198754','Electric':'#ffc107',
+    'Fire':'#fd7e14','Water':'#0d6efd','Grass':'#198754','Lightning':'#ffc107',
     'Psychic':'#9c6dd8','Fighting':'#dc3545','Darkness':'#343a40','Metal':'#6c757d',
     'Colorless':'#adb5bd','Dragon':'#6f42c1','Fairy':'#e91e8c'
 };
