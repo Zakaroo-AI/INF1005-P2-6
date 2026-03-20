@@ -139,7 +139,7 @@ $types = ['Fire','Water','Grass','Lightning','Psychic','Fighting','Darkness','Me
 <!-- How It Works -->
 <section class="bg-white py-5 my-5" aria-label="How it works">
     <div class="container text-center">
-        <h2 class="section-title mx-auto">How It Works</h2>
+        <h2 class="section-title text-center mx-auto">How It Works</h2>
         <div class="row g-4 mt-2">
             <div class="col-md-4">
                 <div class="display-4 text-primary mb-3" aria-hidden="true"><i class="bi bi-search"></i></div>

@@ -5,7 +5,7 @@
 ?>
 </main>
 
-<footer class="pm-footer mt-5 py-4" role="contentinfo">
+<footer class="pm-footer py-4" role="contentinfo">
     <div class="container">
         <div class="row g-4">
             <div class="col-md-4">

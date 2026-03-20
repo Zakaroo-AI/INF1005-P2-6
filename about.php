@@ -2,8 +2,9 @@
 // ============================================================
 // about.php — About Us
 // ============================================================
-$pageTitle = 'About Us';
-require_once 'includes/header.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once 'config/db.php';
+require_once 'includes/auth.php';
 
 // Handle contact form
 $success = false;
@@ -12,14 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name    = trim($_POST['name']    ?? '');
     $email   = trim($_POST['email']   ?? '');
     $message = trim($_POST['message'] ?? '');
-    if (strlen($name) < 2)                        $errors[] = 'Please enter your name.';
+    if (strlen($name) < 2)                         $errors[] = 'Please enter your name.';
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Please enter a valid email.';
-    if (strlen($message) < 10)                    $errors[] = 'Message must be at least 10 characters.';
+    if (strlen($message) < 10)                     $errors[] = 'Message must be at least 10 characters.';
     if (empty($errors)) {
         // In a real app you would send an email here using mail() or PHPMailer
         $success = true;
     }
 }
+
+$pageTitle = 'About Us';
+require_once 'includes/header.php';
 ?>
 
 <!-- Hero Banner -->

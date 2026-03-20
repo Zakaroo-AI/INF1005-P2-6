@@ -184,8 +184,8 @@ function showToast(message, type = 'success') {
     </div>`;
     container.insertAdjacentHTML('beforeend', html);
     const toastEl = document.getElementById(id);
-    const toast   = new bootstrap.Toast(toastEl, { delay: 3000 });
-    toast.show();
+    const toast   = new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
+    requestAnimationFrame(() => toast.show());
     toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
 }
 

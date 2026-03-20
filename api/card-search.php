@@ -2,8 +2,6 @@
 // ============================================================
 // api/card-search.php — Proxy to Pokémon TCG API
 // ============================================================
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 $q = trim($_GET['q'] ?? '');
@@ -28,11 +26,9 @@ $response  = curl_exec($ch);
 $curlError = curl_error($ch);
 curl_close($ch);
 
-if (!$response) { echo json_encode(['debug' => 'curl failed', 'error' => $curlError]); exit; }
+if (!$response) { echo json_encode([]); exit; }
 
-$data  = json_decode($response, true);
-if (isset($_GET['debug'])) { echo $response; exit; }
-if (isset($_GET['debug2'])) { echo json_encode(['json_error' => json_last_error_msg(), 'count' => count($data['data'] ?? [])]); exit; }
+$data = json_decode($response, true);
 $cards = [];
 
 foreach ($data['data'] ?? [] as $card) {
@@ -51,9 +47,17 @@ foreach ($data['data'] ?? [] as $card) {
 echo json_encode($cards);
 
 function mapRarity(string $r): string {
-    if (strpos($r, 'Secret') !== false || strpos($r, 'Rainbow') !== false || strpos($r, 'Gold') !== false) return 'Secret Rare';
+    if (strpos($r, 'Hyper') !== false)                                                                       return 'Hyper Rare';
+    if (strpos($r, 'Special Illustration') !== false)                                                        return 'Special Illustration Rare';
+    if (strpos($r, 'Illustration Rare') !== false)                                                           return 'Illustration Rare';
+    if (strpos($r, 'Shiny Ultra') !== false)                                                                 return 'Shiny Ultra Rare';
+    if (strpos($r, 'Shiny') !== false)                                                                       return 'Shiny Rare';
+    if (strpos($r, 'Ace Spec') !== false)                                                                    return 'Ace Spec Rare';
+    if (strpos($r, 'Secret') !== false || strpos($r, 'Rainbow') !== false || strpos($r, 'Gold') !== false)  return 'Secret Rare';
     if (strpos($r, 'Ultra') !== false  || strpos($r, 'VMAX') !== false    || strpos($r, 'VSTAR') !== false) return 'Ultra Rare';
-    if (strpos($r, 'Holo') !== false   || strpos($r, 'EX') !== false      || strpos($r, 'GX') !== false)    return 'Holo Rare';
+    if (strpos($r, 'Double Rare') !== false || strpos($r, 'Two Rare') !== false)                            return 'Double Rare';
+    if (strpos($r, 'Promo') !== false)                                                                       return 'Promo';
+    if (strpos($r, 'Holo') !== false || strpos($r, 'EX') !== false || strpos($r, 'GX') !== false || preg_match('/ V( |$)/', $r) || strpos($r, 'BREAK') !== false) return 'Holo Rare';
     if ($r === 'Rare')     return 'Rare';
     if ($r === 'Uncommon') return 'Uncommon';
     return 'Common';

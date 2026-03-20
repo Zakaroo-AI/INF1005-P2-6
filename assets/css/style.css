@@ -167,6 +167,10 @@ body {
     border-radius: 2px;
     margin-top: 6px;
 }
+.section-title.text-center::after {
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* ---- Cart ---- */
 .cart-item-img {
@@ -252,7 +256,7 @@ body {
 /* ---- Admin Sidebar ---- */
 .admin-sidebar {
     background: var(--pm-dark);
-    min-height: 100vh;
+    min-height: calc(100vh - 56px);
     color: white;
     padding-top: 1rem;
 }
@@ -269,6 +273,9 @@ body {
 }
 .admin-sidebar .nav-link i {
     width: 22px;
+}
+body:has(.admin-sidebar) .pm-footer {
+    margin-top: 0 !important;
 }
 
 /* ---- Stat Cards ---- */
@@ -326,10 +333,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* ---- Filter sidebar sticky — drops down when navbar hides on scroll ---- */
 .filter-sticky {
     top: 76px;
-    transition: top 0.3s ease;
+    transition: top 0.3s ease, max-height 0.3s ease;
+    max-height: calc(100vh - 84px);
+    overflow-y: auto;
 }
 body:has(.pm-navbar.navbar-hidden) .filter-sticky {
     top: 8px;
+    max-height: calc(100vh - 16px);
 }
 
 /* ---- Page fade-in (main content only — navbar stays fixed) ---- */
