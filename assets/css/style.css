@@ -366,7 +366,9 @@ main#main-content {
 .rarity-ace-spec-rare {
     position: relative;
     overflow: hidden;
+    vertical-align: middle;
 }
+.type-badge { vertical-align: middle; }
 .rarity-holo-rare::after,
 .rarity-ultra-rare::after,
 .rarity-hyper-rare::after,
