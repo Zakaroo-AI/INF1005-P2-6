@@ -26,36 +26,24 @@ require_once 'includes/header.php';
                         <small class="text-light-emphasis">Online • Pokémon specialist</small>
                     </div>
                 </div>
-                <span class="trainer-status">DS Link Active</span>
+                <span class="trainer-status" id="statusBadge">DS Link Active</span>
             </div>
 
             <div class="trainer-chat-body" id="chatBody">
                 <div class="chat-row trainer-msg">
                     <div class="chat-bubble">
-                        Yo trainer! I’m Trainer Dex. Ask me about Pokémon, card prices, card facts, rarity, or collecting tips.
+                        Yo trainer! I'm Trainer Dex. Ask me about Pokémon, card prices, card facts, rarity, or collecting tips.
                     </div>
                 </div>
 
                 <div class="chat-row trainer-msg">
                     <div class="chat-bubble">
-                        If it’s not Pokémon-related, I’ll have to pass — I’m just a Pokémon trainer, not a professor of everything.
-                    </div>
-                </div>
-
-                <div class="chat-row user-msg">
-                    <div class="chat-bubble">
-                        How much is a Charizard card worth?
-                    </div>
-                </div>
-
-                <div class="chat-row trainer-msg">
-                    <div class="chat-bubble">
-                        That depends on the exact card, set, rarity, condition, and grading. Show me the card name or set and I’ll help narrow it down.
+                        If it's not Pokémon-related, I'll have to pass — I'm just a Pokémon trainer, not a professor of everything.
                     </div>
                 </div>
             </div>
 
-            <form class="trainer-chat-input" onsubmit="return fakeTrainerReply(event)">
+            <form class="trainer-chat-input" id="chatForm">
                 <div class="input-group">
                     <input
                         type="text"
@@ -64,66 +52,219 @@ require_once 'includes/header.php';
                         placeholder="Ask about Pokémon cards, prices, or facts..."
                         maxlength="200"
                         autocomplete="off"
+                        disabled
                     >
-                    <button class="btn btn-warning fw-bold px-4" type="submit">
+                    <button class="btn btn-warning fw-bold px-4" type="submit" id="sendBtn">
                         <i class="bi bi-send-fill me-1"></i>Send
                     </button>
                 </div>
-                <small class="text-muted d-block mt-2">
-                    Demo UI for now — backend AI integration can be connected later.
+                <small class="text-muted d-block mt-2" id="formNote">
+                    Connecting to AI backend...
                 </small>
             </form>
         </div>
     </div>
 </section>
 
+<style>
+    .typing-indicator {
+        display: flex;
+        gap: 4px;
+        padding: 8px 12px;
+    }
+    .typing-indicator span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #666;
+        animation: typing 1.4s infinite;
+    }
+    .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    @keyframes typing {
+        0%, 60%, 100% {
+            opacity: 0.5;
+        }
+        30% {
+            opacity: 1;
+        }
+    }
+    .error-bubble {
+        background-color: #ffebee !important;
+        color: #c62828 !important;
+        border-color: #ef5350 !important;
+    }
+</style>
+
 <script>
-function fakeTrainerReply(event) {
-    event.preventDefault();
+    const API_ENDPOINT = '/api/trainer-chat.php'; // Backend endpoint
+    let isConnected = false;
+    let conversationHistory = [];
 
-    const input = document.getElementById('trainerInput');
-    const chatBody = document.getElementById('chatBody');
-    const message = input.value.trim();
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('trainerInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const formNote = document.getElementById('formNote');
 
-    if (!message) return false;
+        // Check if backend is available
+        try {
+            const response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'health_check' })
+            });
 
-    const userRow = document.createElement('div');
-    userRow.className = 'chat-row user-msg';
-    userRow.innerHTML = `<div class="chat-bubble"></div>`;
-    userRow.querySelector('.chat-bubble').textContent = message;
-    chatBody.appendChild(userRow);
+            if (response.ok) {
+                isConnected = true;
+                input.disabled = false;
+                sendBtn.disabled = false;
+                formNote.textContent = 'Backend connected ✓';
+                formNote.style.color = '#28a745';
+                document.getElementById('statusBadge').textContent = 'Connected';
+            } else {
+                throw new Error('Backend not responding');
+            }
+        } catch (error) {
+            console.error('Backend connection error:', error);
+            formNote.innerHTML = '<span style="color: #dc3545;">⚠ Backend unavailable. Using demo mode.</span>';
+            // Still enable input for demo mode
+            input.disabled = false;
+            sendBtn.disabled = false;
+        }
 
-    const lower = message.toLowerCase();
-    let reply = "I’m just a Pokémon trainer, so I can only help with Pokémon, cards, card pricing, rarity, sets, and collecting info.";
+        form.addEventListener('submit', (e) => handleSubmit(e));
+    });
 
-    if (
-        lower.includes('pokemon') ||
-        lower.includes('pokémon') ||
-        lower.includes('pikachu') ||
-        lower.includes('charizard') ||
-        lower.includes('card') ||
-        lower.includes('price') ||
-        lower.includes('rarity') ||
-        lower.includes('set') ||
-        lower.includes('trainer')
-    ) {
-        reply = "That sounds like a Pokémon question. Once the AI backend is connected, I’ll be able to answer that properly for you.";
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const input = document.getElementById('trainerInput');
+        const chatBody = document.getElementById('chatBody');
+        const message = input.value.trim();
+
+        if (!message) return false;
+
+        // Add user message to chat
+        addMessageToChat('user', message);
+        conversationHistory.push({ role: 'user', content: message });
+        input.value = '';
+
+        // Show typing indicator
+        const typingRow = showTypingIndicator();
+
+        try {
+            let response;
+
+            if (isConnected) {
+                // Send to real backend
+                response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'chat',
+                        message: message,
+                        history: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                const reply = data.reply;
+                removeTypingIndicator(typingRow);
+                addMessageToChat('trainer', reply);
+                conversationHistory.push({ role: 'assistant', content: reply });
+
+            } else {
+                // Demo mode fallback
+                await simulateDemoResponse(message, typingRow);
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            removeTypingIndicator(typingRow);
+            addMessageToChat('trainer', `Error: ${error.message}. Please try again.`, true);
+        }
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+        return false;
     }
 
-    const trainerRow = document.createElement('div');
-    trainerRow.className = 'chat-row trainer-msg';
-    trainerRow.innerHTML = `<div class="chat-bubble"></div>`;
-    trainerRow.querySelector('.chat-bubble').textContent = reply;
+    function addMessageToChat(sender, message, isError = false) {
+        const chatBody = document.getElementById('chatBody');
+        const row = document.createElement('div');
+        row.className = `chat-row ${sender === 'user' ? 'user-msg' : 'trainer-msg'}`;
 
-    setTimeout(() => {
-        chatBody.appendChild(trainerRow);
+        const bubble = document.createElement('div');
+        bubble.className = isError ? 'chat-bubble error-bubble' : 'chat-bubble';
+        bubble.textContent = message;
+
+        row.appendChild(bubble);
+        chatBody.appendChild(row);
         chatBody.scrollTop = chatBody.scrollHeight;
-    }, 350);
 
-    input.value = '';
-    chatBody.scrollTop = chatBody.scrollHeight;
-    return false;
-}
+        return row;
+    }
+
+    function showTypingIndicator() {
+        const chatBody = document.getElementById('chatBody');
+        const row = document.createElement('div');
+        row.className = 'chat-row trainer-msg';
+        row.id = 'typing-indicator';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+        bubble.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+
+        row.appendChild(bubble);
+        chatBody.appendChild(row);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        return row;
+    }
+
+    function removeTypingIndicator(row) {
+        if (row && row.parentNode) {
+            row.parentNode.removeChild(row);
+        }
+    }
+
+    async function simulateDemoResponse(message, typingRow) {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1200));
+
+        const lower = message.toLowerCase();
+        let reply = "That sounds interesting! Once the backend is connected, I'll have more detailed knowledge about that. For now, I can help with general Pokémon questions!";
+
+        if (lower.includes('charizard')) {
+            reply = "Charizard is one of the most iconic Pokémon! There are many valuable Charizard cards, especially the 1st Edition Base Set Charizard which can be worth thousands depending on condition. What specific Charizard card are you asking about?";
+        } else if (lower.includes('pikachu')) {
+            reply = "Pikachu is legendary! Prices vary wildly depending on which card—Shadowless, 1st Edition, or newer versions. A PSA 10 Pikachu can be worth anywhere from $50 to several thousand dollars. Which Pikachu are you interested in?";
+        } else if (lower.includes('price') || lower.includes('worth')) {
+            reply = "Card values depend on several factors: the card name, set, rarity symbol, edition (1st Edition is usually most valuable), condition, and grading (PSA, BGS, etc.). What card are you curious about?";
+        } else if (lower.includes('prismatic') || lower.includes('evolution')) {
+            reply = "Prismatic Evolution cards are part of newer sets! These tend to be more affordable than vintage cards. Could you tell me the specific card name and set so I can give you better pricing info?";
+        } else if (lower.includes('pokemon') || lower.includes('pokémon') || lower.includes('card') || lower.includes('set') || lower.includes('rarity')) {
+            reply = "Great Pokémon question! Once the AI backend is fully integrated, I'll have access to a database of card prices, rarity info, and collecting tips. What would you like to know?";
+        }
+
+        removeTypingIndicator(typingRow);
+        addMessageToChat('trainer', reply);
+        conversationHistory.push({ role: 'assistant', content: reply });
+    }
 </script>
 
 <?php require_once 'includes/footer.php'; ?>
