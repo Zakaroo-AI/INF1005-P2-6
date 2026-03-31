@@ -49,6 +49,45 @@ require_once 'includes/header.php';
             </div>
         </div>
     </div>
+    <!-- AI Pokemon Trainer -->
+    <section class="ai-trainer-section py-5">
+        <div class="container">
+            <div class="row align-items-center g-4">
+
+                <!-- LEFT: TEXT -->
+                <div class="col-lg-6">
+                    <h2 class="section-title mb-3">Meet Your PokéTrainer AI</h2>
+
+                    <p>
+                        PokéMart Global introduces a smart AI-powered Pokémon Trainer designed to enhance your collecting journey.
+                        Whether you're a new trainer or an experienced collector, our AI is here to guide you.
+                    </p>
+
+                    <p>
+                        Ask about Pokémon facts, card rarity, pricing insights, or collecting tips — and get fast, reliable responses
+                        in a fun, trainer-style experience inspired by classic Pokémon games.
+                    </p>
+
+                    <p class="mb-0">
+                        Our PokéTrainer AI stays focused on what matters most — Pokémon. For anything outside the world of Pokémon,
+                        it will politely decline, just like a real trainer staying true to their expertise.
+                    </p>
+                </div>
+
+                <!-- RIGHT: VISUAL CARD -->
+                <div class="col-lg-6">
+                    <div class="ai-trainer-card text-center p-4">
+                        <div class="mb-3 fs-1">🤖</div>
+                        <h5 class="fw-bold mb-2">AI-Powered Trainer Assistant</h5>
+                        <p class="text-muted mb-0">
+                            Get instant help with Pokémon cards, pricing, and facts — anytime.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <!-- Values -->
     <section class="bg-white rounded-4 p-5 mb-5 shadow-sm" aria-label="Our values">

@@ -68,6 +68,10 @@ $currentPage   = basename($_SERVER['PHP_SELF']);
                     <a class="nav-link <?= $currentPage === 'about.php' ? 'active' : '' ?>"
                        href="/about.php">About Us</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $currentPage === 'trainer.php' ? 'active' : '' ?>"
+                    href="/trainer.php">PokéTrainer AI</a>
+                </li>
             </ul>
 
             <!-- Search form -->

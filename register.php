@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Please enter a valid email address.';
     }
-    if (strlen($password) < 8) {
-        $errors[] = 'Password must be at least 8 characters.';
-    }
+    if (strlen($password) < 8 || strlen($password) > 20) {
+    $errors[] = 'Password must be between 8 and 20 characters.';
+}
     if ($password !== $confirm) {
         $errors[] = 'Passwords do not match.';
     }
@@ -89,13 +89,15 @@ require_once 'includes/header.php';
                 <div class="mb-3">
                     <label for="password" class="form-label fw-semibold">Password</label>
                     <input type="password" class="form-control" id="password" name="password"
-                           required minlength="8" aria-describedby="passHelp">
-                    <div id="passHelp" class="form-text">Minimum 8 characters.</div>
-                    <div class="invalid-feedback">Password must be at least 8 characters.</div>
+                        required minlength="8" maxlength="20" aria-describedby="passHelp">
+                    <div id="passHelp" class="form-text">8–20 characters.</div>
+                    <div class="invalid-feedback">Password must be between 8 and 20 characters.</div>
                 </div>
                 <div class="mb-4">
                     <label for="confirm" class="form-label fw-semibold">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirm" name="confirm" required>
+                    <input type="password" class="form-control" id="confirm" name="confirm"
+                        required minlength="8" maxlength="20" aria-describedby="confirmHelp">
+                    <div id="confirmHelp" class="form-text">8–20 characters.</div>
                     <div class="invalid-feedback">Please confirm your password.</div>
                 </div>
                 <button type="submit" class="btn btn-pm-primary w-100 fw-bold py-2">Create Account</button>
