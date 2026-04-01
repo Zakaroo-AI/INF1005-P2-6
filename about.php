@@ -79,14 +79,14 @@ require_once 'includes/header.php';
 
                 <!-- RIGHT: VISUAL CARD -->
                 <div class="col-lg-6">
-                    <div class="ai-trainer-card text-center p-4">
+                    <div class="about-visual-card about-visual-card-ai text-center">
                         <div class="about-visual-image-wrap about-visual-image-wrap-ai" aria-hidden="true">
                             <img src="/assets/images/ash_poketrainer.png" alt="" class="about-visual-image about-visual-image-bottom">
                         </div>
-                        <h5 class="fw-bold mb-2">AI-Powered Trainer Assistant</h5>
+                        <p class="about-visual-kicker mb-2">AI Assistant</p>
+                        <p class="about-visual-title mb-0">AI-Powered Trainer Assistant</p>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
